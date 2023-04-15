@@ -1,14 +1,22 @@
-#!/usr/bin/env -S sbcl --script
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '() :silent t)
+  )
 
-(let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                       (user-homedir-pathname))))
-  (when (probe-file quicklisp-init)
-    (load quicklisp-init)))
+(defpackage :ros.script.spam-script.3890581773
+  (:use :cl))
+(in-package :ros.script.spam-script.3890581773)
 
 (defvar *text*
   "spam")
 
-(defun main ()
+(defun main (&rest argv)
+  (declare (ignorable argv))
   (let ((counter 0))
     (loop
       (format t "~d spaming...~%" counter)
@@ -23,3 +31,5 @@
   (sb-sys:interactive-interrupt () (progn
                                      (format *error-output* "~%Abort.~&")
                                      (sb-ext:exit))))
+
+;;; vim: set ft=lisp lisp:
